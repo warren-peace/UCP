@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- 
+    <script src="js/angular.min.js"></script> 
+    -->
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <input type="text" id="input" />
+    <input type="submit" onclick="evalSentence()">
+    <div id="output"></div>
+     
+    <script>
+      var stopwordList = [];
+      readList("lists/stopword_list.txt", stopwordList);
+      
+      function evalSentence(){
+        // make tokens
+        var tokens = document.getElementById("input").value.replace(/\s+/g,' ').trim().split(" ");
+        
+        // remove stopwords
+        for ( var i=0; i< tokens.length; i++){
+          for ( var j=0; j< stopwordList.length; j++){
+            if(tokens[i] == stopwordList[j]){
+              tokens.splice(i, 1);
+            }
+          }
+        }
+        
+        
+        console.log(tokens);
+      }
+      
+      function readList(file, wordList){
+            
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function (){
+                if(rawFile.readyState === 4){
+                    if(rawFile.status === 200 || rawFile.status == 0){
+                        if("" != rawFile.responseText){
+                            var allText = JSON.parse(rawFile.responseText);
+                       
+                            for(i=0;i<allText.length;i++){
+                               wordList.push(allText[i]);
+                            }
+                            //console.log(wordList);
+                        }else{
+                            console.log("stopword list is empty");
+                        }
+                        
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+    </script>
+  </body>
+</html>
