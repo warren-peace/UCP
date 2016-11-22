@@ -1,12 +1,28 @@
 // root
 var tree = new Tree('START');
 
-//test
-// tree.add('A', 0, 'START', 0, tree.traverseBF);
-// tree.add('B', 0, 'A', 0, tree.traverseBF);
-// tree.add('B', 1, 'A', 0, tree.traverseBF);
-// console.log(tree._root.children[0]);
-// tree.connectNodes('B', 0, 'R', 0, tree.traverseBF);
-// var a = tree.remove('A', 0, 'R', 0, tree.traverseBF);
-// var b = tree.removeParent('B', 0, 'A', 0, tree.traverseBF);
-// console.log(tree._root.children);
+// level 0
+ tree.add('V', 0, 'START', 0, tree.traverseBF);
+ tree.add('Adj', 0, 'START', 0, tree.traverseBF);
+ tree.add('Adv', 0, 'START', 0, tree.traverseBF);
+ 
+// level 1
+ tree.add('N', 1, 'V', 0, tree.traverseBF);
+ tree.add('P', 1, 'V', 0, tree.traverseBF);
+ tree.add('V', 1, 'V', 0, tree.traverseBF);
+ tree.add('C', 1, 'Adj', 0, tree.traverseBF);
+ tree.connectNodes('N', 1, 'C', 1, tree.traverseBF);
+ tree.connectNodes('V', 1, 'Adj', 0, tree.traverseBF);
+ tree.connectNodes('V', 1, 'Adv', 0, tree.traverseBF);
+
+// level 2
+ tree.add('N', 2, 'N', 1, tree.traverseBF);
+ tree.add('Prep', 2, 'P', 1, tree.traverseBF);
+ tree.connectNodes('N', 2, 'Prep', 2, tree.traverseBF);
+ tree.connectNodes('N', 2, 'V', 1, tree.traverseBF);
+ tree.connectNodes('N', 2, 'P', 1, tree.traverseBF);
+ tree.connectNodes('Prep', 2, 'V', 0, tree.traverseBF);
+ 
+// end
+ tree.add('END', 0, 'P', 1, tree.traverseBF);
+ tree.add('END', 0, 'N', 2, tree.traverseBF);
