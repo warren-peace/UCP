@@ -40,15 +40,23 @@
         
         
         // tagging
-        /*
+        //test
+        mtokens = [["hello", "", "V"],["hello", "", "N"],["hello", "", ""]]
         for(var i = 0; i < mtokens.length; i++){
           if(i > 1){
             tree.traverseBF(function(node) {
-              //if(sd)
-              console.log(node.data)
+              if(mtokens[i-2][2] === node.data){ // n-2
+                for(var j = 0; j < node.children.length; j++){
+                  if(mtokens[i-1][2] === node.children[j].data){ // n-1
+                    for(var k = 0; k < node.children.length; k++){
+                      console.log(node.children[j].children[k].data); // possible tag
+                    }
+                  }
+                }
+              }
             });
           }
-        }*/
+        }
         
         console.log(mtokens);
       }
