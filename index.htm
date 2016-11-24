@@ -36,29 +36,45 @@
           //console.log(mtokens[i][0]);
         }
         
-        // word stemming
+        // word stemming and dictionary tagging
         
         
         // tagging
         //test
         mtokens = [["hello", "", "V"],["hello", "", "N"],["hello", "", ""]]
         for(var i = 0; i < mtokens.length; i++){
-          if(i > 1){
-            tree.traverseBF(function(node) {
-              if(mtokens[i-2][2] === node.data){ // n-2
-                for(var j = 0; j < node.children.length; j++){
-                  if(mtokens[i-1][2] === node.children[j].data){ // n-1
-                    for(var k = 0; k < node.children[j].children.length; k++){
-                      console.log(node.children[j].children[k].data); // possible tag
+          if(mtokens[i][2] === ""){
+            if(i > 1){
+              tree.traverseBF(function(node) {
+                if(mtokens[i-2][2] === node.data){ // n-2
+                  for(var j = 0; j < node.children.length; j++){
+                    if(mtokens[i-1][2] === node.children[j].data){ // n-1
+                      for(var k = 0; k < node.children[j].children.length; k++){
+                        if(node.children[j].children[k].data !== "END"){
+                          console.log(node.children[j].children[k].data); // possible tags for i
+                        }
+                      }
                     }
                   }
                 }
-              }
-            });
+              });
+            }else if(i == 1){
+              tree.traverseBF(function(node) {
+                if(mtokens[0][2] === node.data){ // n-1
+                  for(var j = 0; j < node.children.length; j++){
+                    if(node.children[j].data !== "END"){
+                      console.log(node.children[j].data); // possible tags for i
+                    }
+                  }
+                }
+              });
+            }else{
+              mtokens[i][2] = "V"; // default
+            }
           }
         }
         
-        console.log(mtokens);
+        // console.log(mtokens);
       }
       
       function readList(file, wordList){
