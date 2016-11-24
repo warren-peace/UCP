@@ -21,16 +21,36 @@
         var tokens = document.getElementById("input").value.replace(/\s+/g,' ').trim().split(" ");
         
         // remove stopwords
-        for ( var i=0; i< tokens.length; i++){
-          for ( var j=0; j< stopwordList.length; j++){
+        for ( var i = 0; i< tokens.length; i++){
+          for ( var j = 0; j< stopwordList.length; j++){
             if(tokens[i] == stopwordList[j]){
               tokens.splice(i, 1);
             }
           }
         }
         
+        // multidimensional array. element: [original_word, stemmed_word, part_of_speech]
+        var mtokens = [];
+        for(var i = 0; i < tokens.length; i++){
+          mtokens.push([tokens[i],"",""]);
+          console.log(mtokens[i][0])
+        }
         
-        console.log(tokens);
+        // word stemming
+        
+        
+        // tagging
+        /*
+        for(var i = 0; i < mtokens.length; i++){
+          if(i > 1){
+            tree.traverseBF(function(node) {
+              //if(sd)
+              console.log(node.data)
+            });
+          }
+        }*/
+        
+        console.log(mtokens);
       }
       
       function readList(file, wordList){

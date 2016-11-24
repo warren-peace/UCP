@@ -35,6 +35,6 @@ var tree = new Tree('START');
  tree.connectNodes('END', 0, 'N', 2, tree.traverseBF);
  tree.connectNodes('END', 0, 'V', 0, tree.traverseBF);
 
- tree.traverseBF(function(node) {
-    console.log(node.data)
-});
+ // tree.traverseBF(function(node) {
+    // console.log(node.data)
+// });
