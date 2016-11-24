@@ -33,7 +33,7 @@
         var mtokens = [];
         for(var i = 0; i < tokens.length; i++){
           mtokens.push([tokens[i],"",""]);
-          console.log(mtokens[i][0])
+          //console.log(mtokens[i][0]);
         }
         
         // word stemming
@@ -48,7 +48,7 @@
               if(mtokens[i-2][2] === node.data){ // n-2
                 for(var j = 0; j < node.children.length; j++){
                   if(mtokens[i-1][2] === node.children[j].data){ // n-1
-                    for(var k = 0; k < node.children.length; k++){
+                    for(var k = 0; k < node.children[j].children.length; k++){
                       console.log(node.children[j].children[k].data); // possible tag
                     }
                   }
