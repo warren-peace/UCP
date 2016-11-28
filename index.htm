@@ -13,8 +13,8 @@
     <div id="output"></div>
      
     <script>
-      var stopwordList = [];
-      readList("lists/stopword_list.txt", stopwordList);
+      var theWordList = [];
+      readList("lists/stopword_list.txt", theWordList);
       
       function evalSentence(){
         // make tokens
@@ -22,8 +22,8 @@
         
         // remove stopwords
         for ( var i = 0; i< tokens.length; i++){
-          for ( var j = 0; j< stopwordList.length; j++){
-            if(tokens[i] == stopwordList[j]){
+          for ( var j = 0; j< theWordList.length; j++){
+            if(tokens[i] == theWordList[j]){
               tokens.splice(i, 1);
             }
           }
@@ -90,7 +90,6 @@
                             for(i=0;i<allText.length;i++){
                                wordList.push(allText[i]);
                             }
-                            //console.log(wordList);
                         }else{
                             console.log("stopword list is empty");
                         }
