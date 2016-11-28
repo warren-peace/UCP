@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <input type="text" id="input" />
+    <input type="text" id="input" value="mangan kan ading" />
     <input type="submit" onclick="evalSentence()">
     <div id="output"></div>
      
@@ -33,22 +33,20 @@
         var mtokens = [];
         for(var i = 0; i < tokens.length; i++){
           mtokens.push([tokens[i],"",""]);
-          //console.log(mtokens[i][0]);
         }
         
         // word stemming and dictionary tagging
         
         
-        // tagging
-        //test
-        mtokens = [["hello", "", "V"],["hello", "", "N"],["hello", "", ""]]
+        // sentence pattern tagging
+        //test-> mtokens = [["mangan", "", "V"],["kan", "", "N"],["ading", "", ""]]
         for(var i = 0; i < mtokens.length; i++){
           if(mtokens[i][2] === ""){
             if(i > 1){
               tree.traverseBF(function(node) {
-                if(mtokens[i-2][2] === node.data){ // n-2
+                if(mtokens[i-2][2] === node.data){ // i-2
                   for(var j = 0; j < node.children.length; j++){
-                    if(mtokens[i-1][2] === node.children[j].data){ // n-1
+                    if(mtokens[i-1][2] === node.children[j].data){ // i-1
                       for(var k = 0; k < node.children[j].children.length; k++){
                         if(node.children[j].children[k].data !== "END"){
                           console.log(node.children[j].children[k].data); // possible tags for i
@@ -58,23 +56,25 @@
                   }
                 }
               });
-            }else if(i == 1){
+            }else if(i >= 1){
               tree.traverseBF(function(node) {
-                if(mtokens[0][2] === node.data){ // n-1
+                if(mtokens[i-1][2] === node.data){ // i-1
                   for(var j = 0; j < node.children.length; j++){
                     if(node.children[j].data !== "END"){
                       console.log(node.children[j].data); // possible tags for i
                     }
                   }
+                  if(mtokens[i][2] === ""){
+                    mtokens[i][2] = "N"; // default for 2nd word and up
+                  }
                 }
               });
             }else{
-              mtokens[i][2] = "V"; // default
+              mtokens[i][2] = "V"; // default for first word
             }
           }
         }
         
-        // console.log(mtokens);
       }
       
       function readList(file, wordList){
