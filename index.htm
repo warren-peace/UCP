@@ -49,19 +49,24 @@
                     if(mtokens[i-1][2] === node.children[j].data){ // i-1
                       for(var k = 0; k < node.children[j].children.length; k++){
                         if(node.children[j].children[k].data !== "END"){
-                          console.log(node.children[j].children[k].data); // possible tags for i
+                          // TODO
+                          // take for example the tag of the last node on the list of possible tags for the i-th word
+                          mtokens[i][2] = node.children[j].children[k].data;
                         }
                       }
                     }
                   }
                 }
               });
-            }else if(i >= 1){
+            }
+            if(i >= 1 && mtokens[i][2] === ""){
               tree.traverseBF(function(node) {
                 if(mtokens[i-1][2] === node.data){ // i-1
                   for(var j = 0; j < node.children.length; j++){
                     if(node.children[j].data !== "END"){
-                      console.log(node.children[j].data); // possible tags for i
+                      // TODO
+                      // take for example the tag of the last node on the list of possible tags for the i-th word
+                      mtokens[i][2] = node.children[j].data;
                     }
                   }
                   if(mtokens[i][2] === ""){
@@ -70,11 +75,16 @@
                 }
               });
             }else{
-              mtokens[i][2] = "V"; // default for first word
+              mtokens[i][2] = "V"; // default for first word. Verb is the most common tag for first word
             }
           }
         }
-        
+        // print results
+        var temp = "";
+        for(var i = 0; i < mtokens.length; i++){
+          temp = temp + mtokens[i][0] + " : " + mtokens[i][2] + "<br />";
+        }
+        document.getElementById("output").innerHTML = temp;
       }
       
       function readList(file, wordList){
