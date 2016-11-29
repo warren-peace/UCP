@@ -1,5 +1,0 @@
-[
-["none/N","none/N","ading/N"],
-["Mangan/V","kan/N","ading/N"],
-["none/N","none/N","ading/N"]
-]

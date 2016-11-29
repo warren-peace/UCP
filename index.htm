@@ -36,10 +36,33 @@
         }
         
         // tagging through collocates
-        // test ->[["none/N","none/N","ading/N"],["Mangan/V","kan/N","ading/N"],["none/N","none/N","ading/N"]]
-        var theWordList2 = [["none/N","none/N","ading/N"],["Mangan/V","kan/N","ading/N"],["none/N","none/N","ading/N"]];
-        for(var i = 0; i < theWordList2.length; i++){
-          console.log(theWordList2[i][0]);
+        // test ->[["ngem/C","awan/N","ading/N"],["tapno/C","mangan/V","kan/N"],["tapno/N","mangan/V","ading/N"]]
+        var theWordList2 = []; 
+        for(var i = 0; i < mtokens.length; i++){
+          if(mtokens[i][2] === ""){
+            // should change to find the list of collocates for the i-th word
+            theWordList2 = [
+              [["ngem","C"],["awan","N"],["ading","N"]],
+              [["tapno","C"],["mangan","V"],["kan","N"]],
+              [["tapno","N"],["mangan","V"],["ading","N"]]
+              ];
+            if(i > 1){
+              for(var m = 0; m < theWordList2.length; m++){
+                if(mtokens[i-2][0] === theWordList2[m][0][0]){ // i-2
+                  if(mtokens[i-1][0] === theWordList2[m][1][0]){ // i-1
+                    mtokens[i][2] = theWordList2[m][2][1];
+                  }
+                }
+              }
+            }
+            if(i >= 1 && mtokens[i][2] === ""){
+              for(var m = 0; m < theWordList2.length; m++){
+                if(mtokens[i-1][0] === theWordList2[m][1][0]){ // i-1
+                  mtokens[i][2] = theWordList2[m][2][1];
+                }
+              }
+            }
+          }
         }
         
         // TODO
@@ -47,7 +70,7 @@
         
         
         // sentence pattern tagging
-        //test-> mtokens = [["mangan", "", "V"],["kan", "", "N"],["ading", "", ""]]
+        //test-> mtokens = [["mangan", "", "V"],["kan", "", "N"],["ading", "", ""]];
         for(var i = 0; i < mtokens.length; i++){
           if(mtokens[i][2] === ""){
             if(i > 1){
@@ -60,6 +83,7 @@
                           // TODO
                           // take for example the tag of the last node on the list of possible tags for the i-th word
                           mtokens[i][2] = node.children[j].children[k].data;
+                          break;
                         }
                       }
                     }
@@ -82,7 +106,7 @@
                   }
                 }
               });
-            }else{
+            }else if(mtokens[i][2] === ""){
               mtokens[i][2] = "V"; // default for first word. Verb is the most common tag for first word
             }
           }
