@@ -14,8 +14,8 @@
      
     <script>
       var theWordList = [];
-      readList("lists/stopword_list.txt", theWordList);
-      
+      theWordList = readList("lists/stopword_list.txt");
+     
       function evalSentence(){
         // make tokens
         var tokens = document.getElementById("input").value.replace(/\s+/g,' ').trim().split(" ");
@@ -35,6 +35,14 @@
           mtokens.push([tokens[i],"",""]);
         }
         
+        // tagging through collocates
+        // test ->[["none/N","none/N","ading/N"],["Mangan/V","kan/N","ading/N"],["none/N","none/N","ading/N"]]
+        var theWordList2 = [["none/N","none/N","ading/N"],["Mangan/V","kan/N","ading/N"],["none/N","none/N","ading/N"]];
+        for(var i = 0; i < theWordList2.length; i++){
+          console.log(theWordList2[i][0]);
+        }
+        
+        // TODO
         // word stemming and dictionary tagging
         
         
@@ -87,29 +95,29 @@
         document.getElementById("output").innerHTML = temp;
       }
       
-      function readList(file, wordList){
-            
-            var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, true);
-            rawFile.onreadystatechange = function (){
-                if(rawFile.readyState === 4){
-                    if(rawFile.status === 200 || rawFile.status == 0){
-                        if("" != rawFile.responseText){
-                            var allText = JSON.parse(rawFile.responseText);
-                       
-                            for(i=0;i<allText.length;i++){
-                               wordList.push(allText[i]);
-                            }
-                        }else{
-                            console.log("stopword list is empty");
+      // get JSON formatted data and push in an array
+      function readList(file){
+        var wordList = [];
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, true);
+        rawFile.onreadystatechange = function (){
+            if(rawFile.readyState === 4){
+                if(rawFile.status === 200 || rawFile.status == 0){
+                    if("" != rawFile.responseText){
+                        var allText = JSON.parse(rawFile.responseText);
+                        for(i=0;i<allText.length;i++){
+                          wordList.push(allText[i]);
                         }
-                        
+                    }else{
+                        console.log("list is empty");
                     }
                 }
             }
-            rawFile.send(null);
         }
-        
+        rawFile.send(null);
+        return wordList;
+      }
+       
     </script>
     
   </body>
