@@ -1,25 +1,138 @@
 <!doctype html>
 <html>
-  <head>
-     
+  <head>    
     <script src="js/automata_framework.js"></script> 
-    <script src="js/automata_sentence.js"></script> 
-    
+    <script src="js/automata_sentence.js"></script>     
     <meta charset="utf-8" />
+	<title>Ilocano Syntactic Checker</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/freelancer.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
   </head>
-  <body>
-    <input type="text" id="input" value="mangan kan ading" />
-    <input type="submit" onclick="evalSentence()">
-    <div id="output"></div>
-     
-    <script>
+  <body id="page-top" class="index">
+        <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#page-top">Ilocano Dialect Syntactic Checker</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#check">Check Sentence</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#about">About</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+	    <!-- Header -->
+    <header id="check">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <img class="img-responsive" src="img/windows-logo.png" alt="">
+                    <div class="intro-text">
+                        <span class="name">Check Sentence</span>
+                        <hr class="star-light">
+                        <span class="skills">
+							<input type="text" id="input" value="mangan kan ading" />
+							<button type="submit" onclick="evalSentence()" class="btn btn-primary">Check</button>
+						</span>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+	<!-- Output Section -->
+    <section id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Checker Output</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-lg-offset-2">
+                    <div id="output">
+					</div>
+                </div>
+            </div>
+        </div>
+    </section>	
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="footer-above">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col col-md-4">
+                        <h3>Location</h3>
+                        <p>University of the Cordilleras<br>Gov. Pack Road, Baguio City</p>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>The Developers</h3>
+                        <ul class="list-inline">
+                            <li class="profile-pic">
+                                <a href="#" class="btn-social btn-outline"><img src="img/jason.jpg" alt="..." class="img-circle profile_img"></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-dribbble"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>About IDSC</h3>
+                        <p>IDSC is a free to use, open source syntactic checker for the Ilocano Dialect <a href="#check">Start IDSC</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; Ilocano Dialect Syntactic Checker 2016
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>	
+	
+	    <script>
       var theWordList = [];
       theWordList = readList("lists/stopword_list.txt");
      
       function evalSentence(){
         // make tokens
-        var tokens = document.getElementById("input").value.replace(/\s+/g,' ').trim().split(" ");
-        
+        var tokens = document.getElementById("input").value.replace(/\s+/g,' ').trim().split(" ");        
         // remove stopwords
         for ( var i = 0; i< tokens.length; i++){
           for ( var j = 0; j< theWordList.length; j++){
@@ -27,14 +140,12 @@
               tokens.splice(i, 1);
             }
           }
-        }
-        
+        }       
         // multidimensional array. element: [original_word, stemmed_word, part_of_speech]
         var mtokens = [];
         for(var i = 0; i < tokens.length; i++){
           mtokens.push([tokens[i],"",""]);
-        }
-        
+        }       
         // tagging through collocates
         // test ->[["ngem/C","awan/N","ading/N"],["tapno/C","mangan/V","kan/N"],["tapno/N","mangan/V","ading/N"]]
         var theWordList2 = []; 
@@ -63,12 +174,9 @@
               }
             }
           }
-        }
-        
+        }        
         // TODO
-        // word stemming and dictionary tagging
-        
-        
+        // word stemming and dictionary tagging       
         // sentence pattern tagging
         //test-> mtokens = [["mangan", "", "V"],["kan", "", "N"],["ading", "", ""]];
         for(var i = 0; i < mtokens.length; i++){
@@ -117,8 +225,7 @@
           temp = temp + mtokens[i][0] + " : " + mtokens[i][2] + "<br />";
         }
         document.getElementById("output").innerHTML = temp;
-      }
-      
+      }     
       // get JSON formatted data and push in an array
       function readList(file){
         var wordList = [];
@@ -141,8 +248,6 @@
         rawFile.send(null);
         return wordList;
       }
-       
     </script>
-    
   </body>
 </html>
