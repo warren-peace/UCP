@@ -151,9 +151,9 @@
         var promises = [];
         for (var i = 0; i < mtokens.length; i++) {
           promises.push($.ajax({
-            url: "/UCP/getCollocates.php",
+            url: "getCollocates.php",
             type: "POST",
-            data: JSON.stringify({'toFind': 'awan'}),
+            data: JSON.stringify({'toFind': mtokens[i][0]}),
             contentType: "application/json"
           }));
         }
@@ -197,7 +197,6 @@
                       if(mtokens[i-1][2] === node.children[j].data){ // i-1
                         for(var k = 0; k < node.children[j].children.length; k++){
                           if(node.children[j].children[k].data !== "END"){
-                            // TODO
                             // take for example the tag of the last node on the list of possible tags for the i-th word
                             mtokens[i][2] = node.children[j].children[k].data;
                             break;
@@ -213,7 +212,6 @@
                   if(mtokens[i-1][2] === node.data){ // i-1
                     for(var j = 0; j < node.children.length; j++){
                       if(node.children[j].data !== "END"){
-                        // TODO
                         // take for example the tag of the last node on the list of possible tags for the i-th word
                         mtokens[i][2] = node.children[j].data;
                       }
