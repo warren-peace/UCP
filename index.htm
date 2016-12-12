@@ -147,16 +147,23 @@
           mtokens.push([tokens[i],"",""]);
         }       
         // tagging through collocates
-        // test ->[["ngem/C","awan/N","ading/N"],["tapno/C","mangan/V","kan/N"],["tapno/N","mangan/V","ading/N"]]
-        var theWordList2 = []; 
-        for(var i = 0; i < mtokens.length; i++){
-          if(mtokens[i][2] === ""){
-            // should change to find the list of collocates for the i-th word
-            theWordList2 = [
-              [["ngem","C"],["awan","N"],["ading","N"]],
-              [["tapno","C"],["mangan","V"],["kan","N"]],
-              [["tapno","N"],["mangan","V"],["ading","N"]]
-              ];
+               
+        var promises = [];
+        for (var i = 0; i < mtokens.length; i++) {
+          promises.push($.ajax({
+            url: "/UCP/getCollocates.php",
+            type: "POST",
+            data: JSON.stringify({'toFind': 'awan'}),
+            contentType: "application/json"
+          }));
+        }
+        $.when.apply($, promises).then(function() {
+          // returned data is in arguments[0][0], arguments[1][0], ... arguments[9][0]
+          
+          var theWordList2 = []; 
+          for(var i = 0; i < mtokens.length; i++){
+            theWordList2 = arguments[i][0];
+            
             if(i > 1){
               for(var m = 0; m < theWordList2.length; m++){
                 if(mtokens[i-2][0] === theWordList2[m][0][0]){ // i-2
@@ -174,58 +181,65 @@
               }
             }
           }
-        }        
-        // TODO
-        // word stemming and dictionary tagging       
-        // sentence pattern tagging
-        //test-> mtokens = [["mangan", "", "V"],["kan", "", "N"],["ading", "", ""]];
-        for(var i = 0; i < mtokens.length; i++){
-          if(mtokens[i][2] === ""){
-            if(i > 1){
-              tree.traverseBF(function(node) {
-                if(mtokens[i-2][2] === node.data){ // i-2
-                  for(var j = 0; j < node.children.length; j++){
-                    if(mtokens[i-1][2] === node.children[j].data){ // i-1
-                      for(var k = 0; k < node.children[j].children.length; k++){
-                        if(node.children[j].children[k].data !== "END"){
-                          // TODO
-                          // take for example the tag of the last node on the list of possible tags for the i-th word
-                          mtokens[i][2] = node.children[j].children[k].data;
-                          break;
+          
+          console.log(mtokens);
+          // TODO
+          // word stemming and dictionary tagging     
+
+          
+          // sentence pattern tagging
+          for(var i = 0; i < mtokens.length; i++){
+            if(mtokens[i][2] === ""){
+              if(i > 1){
+                tree.traverseBF(function(node) {
+                  if(mtokens[i-2][2] === node.data){ // i-2
+                    for(var j = 0; j < node.children.length; j++){
+                      if(mtokens[i-1][2] === node.children[j].data){ // i-1
+                        for(var k = 0; k < node.children[j].children.length; k++){
+                          if(node.children[j].children[k].data !== "END"){
+                            // TODO
+                            // take for example the tag of the last node on the list of possible tags for the i-th word
+                            mtokens[i][2] = node.children[j].children[k].data;
+                            break;
+                          }
                         }
                       }
                     }
                   }
-                }
-              });
-            }
-            if(i >= 1 && mtokens[i][2] === ""){
-              tree.traverseBF(function(node) {
-                if(mtokens[i-1][2] === node.data){ // i-1
-                  for(var j = 0; j < node.children.length; j++){
-                    if(node.children[j].data !== "END"){
-                      // TODO
-                      // take for example the tag of the last node on the list of possible tags for the i-th word
-                      mtokens[i][2] = node.children[j].data;
+                });
+              }
+              if(i >= 1 && mtokens[i][2] === ""){
+                tree.traverseBF(function(node) {
+                  if(mtokens[i-1][2] === node.data){ // i-1
+                    for(var j = 0; j < node.children.length; j++){
+                      if(node.children[j].data !== "END"){
+                        // TODO
+                        // take for example the tag of the last node on the list of possible tags for the i-th word
+                        mtokens[i][2] = node.children[j].data;
+                      }
+                    }
+                    if(mtokens[i][2] === ""){
+                      mtokens[i][2] = "N"; // default for 2nd word and up
                     }
                   }
-                  if(mtokens[i][2] === ""){
-                    mtokens[i][2] = "N"; // default for 2nd word and up
-                  }
-                }
-              });
-            }else if(mtokens[i][2] === ""){
-              mtokens[i][2] = "V"; // default for first word. Verb is the most common tag for first word
+                });
+              }else if(mtokens[i][2] === ""){
+                mtokens[i][2] = "V"; // default for first word. Verb is the most common tag for first word
+              }
             }
           }
-        }
-        // print results
-        var temp = "";
-        for(var i = 0; i < mtokens.length; i++){
-          temp = temp + mtokens[i][0] + " : " + mtokens[i][2] + "<br />";
-        }
-        document.getElementById("output").innerHTML = temp;
-      }     
+          // print results
+          var temp = "";
+          for(var i = 0; i < mtokens.length; i++){
+            temp = temp + mtokens[i][0] + " : " + mtokens[i][2] + "<br />";
+          }
+          document.getElementById("output").innerHTML = temp;            
+          
+        }, function() {
+            // error occurred
+        });
+      } // end evalSentence     
+      
       // get JSON formatted data and push in an array
       function readList(file){
         var wordList = [];
@@ -248,6 +262,7 @@
         rawFile.send(null);
         return wordList;
       }
+      
     </script>
   </body>
 </html>
