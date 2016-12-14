@@ -182,10 +182,19 @@
             }
           }
           
-          //console.log(mtokens);
-          // TODO
-          // word stemming and dictionary tagging     
-
+          
+          // word stemming and dictionary tagging 
+          promises = [];
+          for(var i = 0; i < mtokens.length; i++){
+            if(mtokens[i][2] == ""){
+              promises.push($.ajax({
+                url: "getRoot.php",
+                type: "POST",
+                data: JSON.stringify({'toFind': mtokens[i][0]}),
+                contentType: "application/json"
+              }));
+            }
+          }
           
           // sentence pattern tagging
           for(var i = 0; i < mtokens.length; i++){
