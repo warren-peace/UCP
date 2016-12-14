@@ -195,56 +195,72 @@
               }));
             }
           }
-          $.when.apply($, promises).then(function() {console.log("promises from dictionary: "+arguments);});
-          
-          // sentence pattern tagging
-          for(var i = 0; i < mtokens.length; i++){
-            if(mtokens[i][2] === ""){
-              if(i > 1){
-                tree.traverseBF(function(node) {
-                  if(mtokens[i-2][2] === node.data){ // i-2
-                    for(var j = 0; j < node.children.length; j++){
-                      if(mtokens[i-1][2] === node.children[j].data){ // i-1
-                        for(var k = 0; k < node.children[j].children.length; k++){
-                          if(node.children[j].children[k].data !== "END"){
-                            // take for example the tag of the last node on the list of possible tags for the i-th word
-                            mtokens[i][2] = node.children[j].children[k].data;
-                            break;
+          $.when.apply($, promises).then(function() {
+            theWordList2 = [];
+            for(var i = 0; i < mtokens.length; i++){
+              for(var j = 0; j < arguments.length; j++){
+                theWordList2 = arguments[j][0];
+                if(mtokens[i][0] == theWordList2[0] && mtokens[i][2] == ""){
+                  mtokens[i][1] = theWordList2[1];
+                  mtokens[i][2] = theWordList2[2];
+                  arguments[j].splice(0,1);
+                  break;
+                }
+              }
+            }
+            
+            
+            // sentence pattern tagging
+            for(var i = 0; i < mtokens.length; i++){
+              if(mtokens[i][2] === ""){
+                if(i > 1){
+                  tree.traverseBF(function(node) {
+                    if(mtokens[i-2][2] === node.data){ // i-2
+                      for(var j = 0; j < node.children.length; j++){
+                        if(mtokens[i-1][2] === node.children[j].data){ // i-1
+                          for(var k = 0; k < node.children[j].children.length; k++){
+                            if(node.children[j].children[k].data !== "END"){
+                              // take for example the tag of the last node on the list of possible tags for the i-th word
+                              mtokens[i][2] = node.children[j].children[k].data;
+                              break;
+                            }
                           }
                         }
                       }
                     }
-                  }
-                });
-              }
-              if(i >= 1 && mtokens[i][2] === ""){
-                tree.traverseBF(function(node) {
-                  if(mtokens[i-1][2] === node.data){ // i-1
-                    for(var j = 0; j < node.children.length; j++){
-                      if(node.children[j].data !== "END"){
-                        // take for example the tag of the last node on the list of possible tags for the i-th word
-                        mtokens[i][2] = node.children[j].data;
+                  });
+                }
+                if(i >= 1 && mtokens[i][2] === ""){
+                  tree.traverseBF(function(node) {
+                    if(mtokens[i-1][2] === node.data){ // i-1
+                      for(var j = 0; j < node.children.length; j++){
+                        if(node.children[j].data !== "END"){
+                          // take for example the tag of the last node on the list of possible tags for the i-th word
+                          mtokens[i][2] = node.children[j].data;
+                        }
+                      }
+                      if(mtokens[i][2] === ""){
+                        mtokens[i][2] = "N"; // default for 2nd word and up
                       }
                     }
-                    if(mtokens[i][2] === ""){
-                      mtokens[i][2] = "N"; // default for 2nd word and up
-                    }
-                  }
-                });
-              }else if(mtokens[i][2] === ""){
-                mtokens[i][2] = "V"; // default for first word. Verb is the most common tag for first word
+                  });
+                }else if(mtokens[i][2] === ""){
+                  mtokens[i][2] = "V"; // default for first word. Verb is the most common tag for first word
+                }
               }
             }
-          }
-          // print results
-          var temp = "";
-          for(var i = 0; i < mtokens.length; i++){
-            temp = temp + mtokens[i][0] + " : " + mtokens[i][2] + "<br />";
-          }
-          document.getElementById("output").innerHTML = temp;            
+            // print results
+            var temp = "";
+            for(var i = 0; i < mtokens.length; i++){
+              temp = temp + mtokens[i][0] + " : " + mtokens[i][2] + "<br />";
+            }
+            document.getElementById("output").innerHTML = temp;            
           
+          }, function() {
+            // error occurred sa dictionary
+          });
         }, function() {
-            // error occurred
+            // error occurred so collocations
         });
       } // end evalSentence     
       
