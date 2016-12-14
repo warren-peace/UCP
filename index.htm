@@ -195,6 +195,7 @@
               }));
             }
           }
+          $.when.apply($, promises).then(function() {console.log("promises from dictionary: "+arguments);});
           
           // sentence pattern tagging
           for(var i = 0; i < mtokens.length; i++){
