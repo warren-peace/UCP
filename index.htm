@@ -132,7 +132,7 @@
      
       function evalSentence(){
         // make tokens
-        var tokens = document.getElementById("input").value.replace(/\s+/g,' ').trim().split(" ");        
+        var tokens = document.getElementById("input").value.replace(/\s+/g,' ').toLowerCase().trim().split(" ");        
         // remove stopwords
         for ( var i = 0; i< tokens.length; i++){
           for ( var j = 0; j< theWordList.length; j++){
